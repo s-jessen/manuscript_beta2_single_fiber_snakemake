@@ -1,0 +1,113 @@
+list---
+title: ""
+output: html_document
+date: "2022-12-25"
+---
+
+Load in libraries and functions
+```{r, include = F}
+source(here::here("R/libraries.R"))
+```
+
+Load in dataset
+```{r, warning=FALSE}
+#Columns to be excluded due to impurity
+impure <- c("s_1", "s_2", "s_3", "s_4", "s_5", "s_6",
+            "s_7", "s_8", "s_13", "s_15", "s_50", "s_52")
+
+#Load and clean data
+df <- read_csv2(here::here('data-raw/proteomic_data.csv')) %>% 
+  #Remove impure samples
+  dplyr::select(-impure) %>%
+  #Make intensity data numeric
+  dplyr::mutate_at(vars(-c("protein", "gene")), as.numeric) %>% 
+  #Replace NaN with NA
+  dplyr::mutate_all(~replace(., is.nan(.), NA)) %>% 
+  #Remove genes without name
+  dplyr::filter(!is.na(gene)) %>% 
+  tibble::column_to_rownames(var="gene") %>% 
+  dplyr::select(-'protein') %>% 
+  dplyr::mutate_if(is.numeric, log2)
+
+#Load metadata
+metadata <- read_xlsx(here::here('data-raw/design.xlsx'))%>% 
+  tibble::column_to_rownames("sample") %>% 
+  dplyr::mutate(dplyr::across(dplyr::everything(), as.factor)) %>% 
+  #Remove impure samples
+  dplyr::filter(!row.names(.) %in% impure) %>% 
+  dplyr::mutate(sample = row.names(.))
+
+#Create Summarized Experiment (SE) of medianscaled data
+se_raw <- PhosphoExperiment(assay = medianScaling(df), colData=metadata) 
+
+#Filter SE for 70% missing values in at least one fiber type
+se <- selectGrps(se_raw, colData(se_raw)$fiber_type, 0.7, n=1)
+
+#Save files to data folder
+usethis::use_data(metadata, overwrite = TRUE)
+usethis::use_data(se_raw, overwrite = TRUE)
+usethis::use_data(se, overwrite = TRUE)
+
+```
+
+Create data frames for plotting
+```{r}
+#Create long form data frame for all data
+df_long <- SummarizedExperiment::assay(se) %>% 
+  tibble::rownames_to_column(var="protein") %>% 
+  tidyr::pivot_longer(
+    cols = -protein,
+    values_to = "abundance",
+    names_to = "sample"
+  ) %>% 
+  dplyr::left_join(metadata, by = "sample")
+
+#Load annotations
+#GO:terms and keywords
+annotations <- read_xlsx(here::here('data-raw/keywords.xlsx')) %>% 
+  dplyr::rename_with(snakecase::to_snake_case) %>% 
+  dplyr::select(c("gene_names", "keywords",
+                  "gene_ontology_biological_process",
+                  "gene_ontology_cellular_component",
+                  "gene_ontology_molecular_function")) %>% 
+  dplyr::rename(gobp = gene_ontology_biological_process,
+                gocc = gene_ontology_cellular_component,
+                gomf = gene_ontology_molecular_function,
+                protein = gene_names) %>% 
+  dplyr::mutate(protein = gsub("\\ .*","", protein))%>% 
+  dplyr::mutate(protein = make.names(protein, unique=TRUE), protein)
+
+#Mitocarta
+mitocarta <- read_xls(here::here('data-raw/mitocarta.xls'))%>% 
+    dplyr::select('symbol', 'pathways') %>% 
+    dplyr::rename(protein=symbol)
+
+#Merge annotations
+df_long <- df_long %>% 
+  merge(annotations, by="protein", all.x = T) %>% 
+  merge(mitocarta, by="protein", all.x = T) %>% 
+  dplyr::rename(mito = pathways)
+
+#Create long form data frame with individual log2fold changes
+df_long_l2fc <- df_long %>%
+  dplyr::group_by(protein, id, fiber_type) %>%
+  dplyr::mutate(l2fc = abundance[time == "post"] - abundance[time == "pre"]) %>%
+  dplyr::relocate(abundance, .after = id) %>% 
+  dplyr::relocate(l2fc, .after = abundance) %>%
+  dplyr::ungroup() %>% 
+  dplyr::filter(time!="pre") %>% 
+  dplyr::select(-c("abundance", "time"))
+
+#Create data frame of mean log2fold changes
+df_long_l2fc_mean <- df_long_l2fc %>% 
+  dplyr::group_by(protein, fiber_type, intervention) %>% 
+  dplyr::summarize(mean_l2fc = mean(l2fc, na.rm = T),
+                   n = sum(!is.na(l2fc)))
+
+#Save to data folder
+usethis::use_data(df_long, overwrite = TRUE)
+usethis::use_data(df_long_l2fc, overwrite = TRUE)
+usethis::use_data(df_long_l2fc_mean, overwrite = TRUE)
+```
+
+

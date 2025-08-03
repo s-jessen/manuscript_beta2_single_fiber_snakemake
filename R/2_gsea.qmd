@@ -1,0 +1,150 @@
+list---
+title: ""
+output: html_document
+date: "2022-12-25"
+---
+
+Load in libraries, functions, and data
+```{r, include = F}
+source(here::here("R/libraries.R"))
+source(here::here("R/functions.R"))
+source(here::here("R/settings.R"))
+
+#Results
+source(here::here("R/results.R"))
+```
+
+Enrichment analysis for each fiber type and intervention
+```{r}
+gsea_results <- list()
+gsea_results_filtered <- list()
+
+results_list <- list("res_i" = results_res_i,
+                     "res_ii" = results_res_ii,
+                    "ter_i" = results_ter_i,
+                     "ter_ii" = results_ter_ii)
+
+for (comparison in names(results_list)){
+  
+  #Extract result
+  res <- results_list[[comparison]]
+  
+  #Preparation of ranked protein list
+  gsea_list <- as.numeric(res$logFC)
+  names(gsea_list) = as.character(res$protein)
+  gsea_list <- gsea_list[!is.na(gsea_list)]
+  
+  #GSEA analysis (GO:BP)
+  gsea <- clusterProfiler::gseGO(
+    geneList = gsea_list,
+    OrgDb = org.Hs.eg.db,
+    ont = "BP",
+    pvalueCutoff = 0.05,
+    keyType = "SYMBOL",
+    eps=0,
+    minGSSize=10
+    )
+  
+  #Filter for redundancy
+  gsea_filtered <- clusterProfiler::simplify(gsea, cutoff=0.5, by="p.adjust", select_fun=min)
+  
+  #Save to gsea_results
+  gsea_results[[comparison]] <- gsea
+  gsea_results_filtered[[comparison]] <- gsea_filtered
+}
+
+#Extract and save to data folder
+gsea_res_i <- gsea_results[["res_i"]]
+gsea_res_ii <- gsea_results[["res_ii"]]
+gsea_ter_i <- gsea_results[["ter_i"]]
+gsea_ter_ii <- gsea_results[["ter_ii"]]
+
+usethis::use_data(gsea_res_i, overwrite = T)
+usethis::use_data(gsea_res_ii, overwrite = T)
+usethis::use_data(gsea_ter_i, overwrite = T)
+usethis::use_data(gsea_ter_ii, overwrite = T)
+
+gsea_res_i_filtered <- gsea_results_filtered[["res_i"]]
+gsea_res_ii_filtered <- gsea_results_filtered[["res_ii"]]
+gsea_ter_i_filtered <- gsea_results_filtered[["ter_i"]]
+gsea_ter_ii_filtered <- gsea_results_filtered[["ter_ii"]]
+
+usethis::use_data(gsea_res_i_filtered, overwrite = T)
+usethis::use_data(gsea_res_ii_filtered, overwrite = T)
+usethis::use_data(gsea_ter_i_filtered, overwrite = T)
+usethis::use_data(gsea_ter_ii_filtered, overwrite = T)
+
+#Merge results
+gsea_all <- clusterProfiler::merge_result(list("res_i" = gsea_res_i,
+                              "res_ii" = gsea_res_ii,
+                              "ter_i" = gsea_ter_i,
+                              "ter_ii" = gsea_ter_ii))
+
+gsea_all_filtered <- clusterProfiler::merge_result(list("res_i" = gsea_res_i_filtered,
+                                       "res_ii" = gsea_res_ii_filtered,
+                                       "ter_i" = gsea_ter_i_filtered,
+                                       "ter_ii" = gsea_ter_ii_filtered))
+
+usethis::use_data(gsea_all, overwrite = T)
+usethis::use_data(gsea_all_filtered, overwrite = T)
+```
+
+Enrichment analysis for interactions
+```{r}
+#GSEAs on intervention x time comparison
+#For fiber type independent, type 1, and type 2 comparisons
+gsea_results <- list()
+gsea_results_filtered <- list()
+
+results_list <- list("i_and_ii_interaction" = results_i_and_ii_interaction,
+                     "i_interaction" = results_i_interaction,
+                      "ii_interaction" = results_ii_interaction)
+
+for (comparison in names(results_list)){
+  
+  #Extract result
+  res <- results_list[[comparison]]
+  
+  #Preparation of ranked protein list
+  gsea_list <- as.numeric(res$logFC)
+  names(gsea_list) = as.character(res$protein)
+  gsea_list <- gsea_list[!is.na(gsea_list)]
+  
+  #GSEA analysis (GO:BP)
+  gsea <- clusterProfiler::gseGO(
+    geneList = gsea_list,
+    OrgDb = org.Hs.eg.db,
+    ont = "ALL",
+    pvalueCutoff = 0.05,
+    keyType = "SYMBOL",
+    eps=0,
+    minGSSize=10
+    )
+  
+  #Filter for redundancy
+  gsea_filtered <- clusterProfiler::simplify(gsea, cutoff=0.5, by="p.adjust", select_fun=min)
+  
+  #Save to gsea_results
+  gsea_results[[comparison]] <- gsea
+  gsea_results_filtered[[comparison]] <- gsea_filtered
+}
+
+#Extract and save to data folder
+gsea_i_and_ii_interaction <- gsea_results[["i_and_ii_interaction"]]
+gsea_i_interaction <- gsea_results[["i_interaction"]]
+gsea_ii_interaction <- gsea_results[["ii_interaction"]]
+
+usethis::use_data(gsea_i_and_ii_interaction, overwrite = T)
+usethis::use_data(gsea_i_interaction, overwrite = T)
+usethis::use_data(gsea_ii_interaction, overwrite = T)
+
+gsea_i_and_ii_interaction_filtered <- gsea_results_filtered[["i_and_ii_interaction"]]
+gsea_i_interaction_filtered <- gsea_results_filtered[["i_interaction"]]
+gsea_ii_interaction_filtered <- gsea_results_filtered[["ii_interaction"]]
+
+usethis::use_data(gsea_i_and_ii_interaction_filtered, overwrite = T)
+usethis::use_data(gsea_i_interaction_filtered, overwrite = T)
+usethis::use_data(gsea_ii_interaction_filtered, overwrite = T)
+
+```
+
