@@ -1,0 +1,21 @@
+Building DAG of jobs...
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job             count
+------------  -------
+renv_install        1
+total               1
+
+Select jobs to execute...
+
+[Mon Aug  4 12:36:22 2025]
+rule renv_install:
+    jobid: 0
+    reason: Rules with neither input nor output files are always executed.
+    resources: tmpdir=C:\Users\SRENJE~1\AppData\Local\Temp
+
+[Mon Aug  4 12:37:04 2025]
+Finished job 0.
+1 of 1 steps (100%) done
+Complete log: .snakemake\log\2025-08-04T123622.369075.snakemake.log

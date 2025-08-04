@@ -1,3 +1,6 @@
+source("renv/activate.R")
+renv::restore()
+
 library(dplyr)
 library(tibble)
 library(usethis)
@@ -26,7 +29,7 @@ df <- read.csv2(snakemake@input[["raw_data"]]) %>%
   dplyr::mutate_if(is.numeric, log2)
 
 #Load metadata
-metadata <- read_xlsx(snakemake@input[["design"]])%>%
+metadata <- readxl::read_xlsx(snakemake@input@design@)%>%
   tibble::column_to_rownames("sample") %>%
   dplyr::mutate(dplyr::across(dplyr::everything(), as.factor)) %>%
   #Remove impure samples

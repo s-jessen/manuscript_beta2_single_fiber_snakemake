@@ -1,0 +1,33 @@
+Building DAG of jobs...
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job          count
+---------  -------
+data_prep        1
+total            1
+
+Select jobs to execute...
+
+[Mon Aug  4 10:21:55 2025]
+rule data_prep:
+    input: data-raw/proteomic_data.csv, data-raw/design.xlsx, data-raw/keywords.xlsx, data-raw/mitocarta.xls
+    output: data/metadata.rda, data/se_raw.rda, data/se.rda, data/df_long.rda, data/df_long_l2fc.rda, data/df_long_l2fc_mean.rda
+    jobid: 0
+    reason: Forced execution
+    resources: tmpdir=C:\Users\SRENJE~1\AppData\Local\Temp
+
+[Mon Aug  4 10:21:56 2025]
+Error in rule data_prep:
+    jobid: 0
+    input: data-raw/proteomic_data.csv, data-raw/design.xlsx, data-raw/keywords.xlsx, data-raw/mitocarta.xls
+    output: data/metadata.rda, data/se_raw.rda, data/se.rda, data/df_long.rda, data/df_long_l2fc.rda, data/df_long_l2fc_mean.rda
+
+RuleException:
+CalledProcessError in file C:\R\manuscript_beta2_single_fiber_snakemake\Snakefile, line 17:
+Command 'Rscript --vanilla "C:\R\manuscript_beta2_single_fiber_snakemake\.snakemake\scripts\tmpw1cr1gu9.data_preparation.R"' returned non-zero exit status 1.
+  File "C:\R\manuscript_beta2_single_fiber_snakemake\Snakefile", line 17, in __rule_data_prep
+  File "C:\miniconda3\envs\snakemake_env\Lib\concurrent\futures\thread.py", line 58, in run
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake\log\2025-08-04T102155.263662.snakemake.log

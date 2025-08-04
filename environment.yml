@@ -6,3 +6,6 @@ channels:
 dependencies:
   - python=3.11
   - snakemake=7.32.4
+  - graphviz
+  - r-base=4.4.1
+  - r-renv
