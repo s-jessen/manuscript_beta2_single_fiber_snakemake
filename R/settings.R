@@ -1,3 +1,5 @@
+library(ggplot2)
+
 #Colors
 upregulated_color = "#a51e22"
 downregulated_color = "#1e5886"

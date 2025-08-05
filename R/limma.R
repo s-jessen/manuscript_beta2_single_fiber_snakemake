@@ -1,10 +1,11 @@
+source("renv/activate.R")
+
 library(limma)
 library(SummarizedExperiment)
 library(tidyverse)
-library(usethis)
 library(qvalue)
 
-load(snakemake@input[["se"]])
+se <- readRDS(snakemake@input[["se"]])
 
 #Main effects, within-group effects, and interaction effects independent of group
 
@@ -81,10 +82,10 @@ results_ii <- results_list_res[["type2"]]
 results_interaction <- results_list_res[["interaction"]]
 
 #Save to data folder
-usethis::use_data(results_main, overwrite = TRUE)
-usethis::use_data(results_i, overwrite = TRUE)
-usethis::use_data(results_ii, overwrite = TRUE)
-usethis::use_data(results_interaction, overwrite = TRUE)
+saveRDS(results_main, snakemake@output[["results_main"]])
+saveRDS(results_i, snakemake@output[["results_i"]])
+saveRDS(results_ii, snakemake@output[["results_ii"]])
+saveRDS(results_interaction, snakemake@output[["results_interaction"]])
 
 #Main effects, within-group effects, and interaction effects for terbutaline-group
 #Subset SE
@@ -163,10 +164,10 @@ results_ter_ii <- results_list_ter[["terbutaline_type2"]]
 results_ter_interaction <- results_list_ter[["terbutaline_interaction"]]
 
 #Save to data folder
-usethis::use_data(results_ter_main, overwrite = TRUE)
-usethis::use_data(results_ter_i, overwrite = TRUE)
-usethis::use_data(results_ter_ii, overwrite = TRUE)
-usethis::use_data(results_ter_interaction, overwrite = TRUE)
+saveRDS(results_ter_main, snakemake@output[["results_ter_main"]])
+saveRDS(results_ter_i, snakemake@output[["results_ter_i"]])
+saveRDS(results_ter_ii, snakemake@output[["results_ter_ii"]])
+saveRDS(results_ter_interaction, snakemake@output[["results_ter_interaction"]])
 
 #Main effects, within-group effects, and interaction effects for resistance-group
 
@@ -246,20 +247,20 @@ results_res_ii <- results_list[["resistance_type2"]]
 results_res_interaction <- results_list[["resistance_interaction"]]
 
 #Save to data folder
-usethis::use_data(results_res_main, overwrite = TRUE)
-usethis::use_data(results_res_i, overwrite = TRUE)
-usethis::use_data(results_res_ii, overwrite = TRUE)
-usethis::use_data(results_res_interaction, overwrite = TRUE)
+saveRDS(results_res_main, snakemake@output[["results_res_main"]])
+saveRDS(results_res_i, snakemake@output[["results_res_i"]])
+saveRDS(results_res_ii, snakemake@output[["results_res_ii"]])
+saveRDS(results_res_interaction, snakemake@output[["results_res_interaction"]])
 
 #Unified results
-
 results <- dplyr::bind_rows(results_res_i,
                             results_res_ii,
                             results_ter_i,
                             results_ter_ii) %>% 
   tibble::remove_rownames()
 
-usethis::use_data(results, overwrite = TRUE)
+#Save unified results
+saveRDS(results, snakemake@output[["results"]])
 
 #Interaction effects independent of fiber type
 
@@ -314,7 +315,7 @@ results_i_and_ii_interaction <- limma::topTable(fit2_i_and_ii_interaction, coef 
   dplyr::arrange(desc(logFC))
 
 #Save results
-usethis::use_data(results_i_and_ii_interaction, overwrite = TRUE)
+saveRDS(results_i_and_ii_interaction, snakemake@output[["results_i_and_ii_interaction"]])
 
 #Interaction effects for type I fibers
 #Subset SE
@@ -368,7 +369,7 @@ results_i_interaction <- limma::topTable(fit2_i_interaction, coef = "interaction
   dplyr::arrange(desc(logFC))
 
 #Save results
-usethis::use_data(results_i_interaction, overwrite = TRUE)
+saveRDS(results_i_interaction, snakemake@output[["results_i_interaction"]])
 
 #Interaction effects for type II fibers
 #Subset SE
@@ -422,7 +423,7 @@ results_ii_interaction <- limma::topTable(fit2_ii_interaction, coef = "interacti
   dplyr::arrange(desc(logFC))
 
 #Save results
-usethis::use_data(results_ii_interaction, overwrite = TRUE)
+saveRDS(results_ii_interaction, snakemake@output[["results_ii_interaction"]])
 
 
 #MYH7 vs. MYH2 fibers
@@ -461,4 +462,4 @@ results_myh_ii_vs_i <- limma::topTable(fit2_myh_ii_vs_i, coef = 1, number = Inf,
   dplyr::arrange(desc(logFC))
    
 #Save results to 'data' folder
-usethis::use_data(results_myh_ii_vs_i, overwrite = TRUE)
+saveRDS(results_myh_ii_vs_i, snakemake@output[["results_myh_ii_vs_i"]])

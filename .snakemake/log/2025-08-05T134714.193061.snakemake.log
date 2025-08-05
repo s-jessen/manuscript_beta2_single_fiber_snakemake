@@ -1,0 +1,24 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 10
+Rules claiming more threads will be scaled down.
+Job stats:
+job      count
+-----  -------
+gsea         1
+total        1
+
+Select jobs to execute...
+
+[Tue Aug  5 13:47:14 2025]
+rule gsea:
+    input: data/results_res_main.rds, data/results_res_i.rds, data/results_res_ii.rds, data/results_res_interaction.rds, data/results_ter_main.rds, data/results_ter_i.rds, data/results_ter_ii.rds, data/results_ter_interaction.rds, R/settings.R
+    output: data/gsea_res_i.rds, data/gsea_res_ii.rds, data/gsea_ter_i.rds, data/gsea_ter_ii.rds, data/gsea_all.rds, data/gsea/gsea_results_res_i.csv, data/gsea/gsea_results_res_ii.csv, data/gsea/gsea_results_ter_i.csv, data/gsea/gsea_results_ter_ii.csv, data/gsea/gsea_results_all.csv
+    jobid: 0
+    reason: Missing output files: data/gsea/gsea_results_ter_ii.csv, data/gsea_res_ii.rds, data/gsea/gsea_results_res_i.csv, data/gsea_all.rds, data/gsea/gsea_results_ter_i.csv, data/gsea_ter_i.rds, data/gsea/gsea_results_res_ii.csv, data/gsea_ter_ii.rds, data/gsea/gsea_results_all.csv, data/gsea_res_i.rds
+    resources: tmpdir=/tmp
+
+[Tue Aug  5 13:48:12 2025]
+Finished job 0.
+1 of 1 steps (100%) done
+Complete log: .snakemake/log/2025-08-05T134714.193061.snakemake.log

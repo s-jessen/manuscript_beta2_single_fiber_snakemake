@@ -1,0 +1,24 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 10
+Rules claiming more threads will be scaled down.
+Job stats:
+job                 count
+----------------  -------
+gsea_interaction        1
+total                   1
+
+Select jobs to execute...
+
+[Tue Aug  5 13:31:39 2025]
+rule gsea_interaction:
+    input: data/results_i_and_ii_interaction.rds, data/results_i_interaction.rds, data/results_ii_interaction.rds, R/settings.R
+    output: data/gsea_i_and_ii_interaction.rds, data/gsea_i_interaction.rds, data/gsea_ii_interaction.rds, data/gsea/gsea_results_i_and_ii_interaction, data/gsea/gsea_results_i_interaction, data/gsea/gsea_results_ii_interaction
+    jobid: 0
+    reason: Missing output files: data/gsea_i_interaction.rds, data/gsea/gsea_results_i_interaction, data/gsea/gsea_results_i_and_ii_interaction, data/gsea_i_and_ii_interaction.rds, data/gsea_ii_interaction.rds, data/gsea/gsea_results_ii_interaction
+    resources: tmpdir=/tmp
+
+[Tue Aug  5 13:32:49 2025]
+Finished job 0.
+1 of 1 steps (100%) done
+Complete log: .snakemake/log/2025-08-05T133139.173441.snakemake.log

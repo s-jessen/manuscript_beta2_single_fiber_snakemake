@@ -1,9 +1,7 @@
 source("renv/activate.R")
-renv::restore()
 
 library(dplyr)
 library(tibble)
-library(usethis)
 library(snakecase)
 library(SummarizedExperiment)
 library(PhosR)
@@ -29,7 +27,7 @@ df <- read.csv2(snakemake@input[["raw_data"]]) %>%
   dplyr::mutate_if(is.numeric, log2)
 
 #Load metadata
-metadata <- readxl::read_xlsx(snakemake@input@design@)%>%
+metadata <- readxl::read_xlsx(snakemake@input[["design"]])%>%
   tibble::column_to_rownames("sample") %>%
   dplyr::mutate(dplyr::across(dplyr::everything(), as.factor)) %>%
   #Remove impure samples
@@ -43,9 +41,9 @@ se_raw <- PhosR::PhosphoExperiment(assay = PhosR::medianScaling(df), colData=met
 se <- PhosR::selectGrps(se_raw, colData(se_raw)$fiber_type, 0.7, n=1)
 
 #Save files to data folder
-usethis::use_data(metadata, overwrite = TRUE)
-usethis::use_data(se_raw, overwrite = TRUE)
-usethis::use_data(se, overwrite = TRUE)
+saveRDS(metadata, snakemake@output[["metadata"]])
+saveRDS(se_raw, snakemake@output[["se_raw"]])
+saveRDS(se, snakemake@output[["se"]])
 
 #Create long form data frame for all data
 df_long <- SummarizedExperiment::assay(se) %>%
@@ -73,7 +71,7 @@ annotations <- readxl::read_xlsx(snakemake@input[["keywords"]]) %>%
   dplyr::mutate(protein = make.names(protein, unique=TRUE), protein)
 
 #Mitocarta
-mitocarta <- read_xls(snakemake@input[["mitocarta"]])%>%
+mitocarta <- readxl::read_xls(snakemake@input[["mitocarta"]])%>%
   dplyr::select('symbol', 'pathways') %>%
   dplyr::rename(protein=symbol)
 
@@ -100,6 +98,6 @@ df_long_l2fc_mean <- df_long_l2fc %>%
                    n = sum(!is.na(l2fc)))
 
 #Save to data folder
-usethis::use_data(df_long, overwrite = TRUE)
-usethis::use_data(df_long_l2fc, overwrite = TRUE)
-usethis::use_data(df_long_l2fc_mean, overwrite = TRUE)
+saveRDS(df_long, snakemake@output[["df_long"]])
+saveRDS(df_long_l2fc, snakemake@output[["df_long_l2fc"]])
+saveRDS(df_long_l2fc_mean, snakemake@output[["df_long_l2fc_mean"]])

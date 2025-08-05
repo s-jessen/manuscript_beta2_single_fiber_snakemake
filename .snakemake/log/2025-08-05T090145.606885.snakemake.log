@@ -1,0 +1,34 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job          count
+---------  -------
+data_prep        1
+total            1
+
+Select jobs to execute...
+
+[Tue Aug  5 09:01:45 2025]
+rule data_prep:
+    input: data-raw/proteomic_data.csv, data-raw/design.xlsx, data-raw/keywords.xlsx, data-raw/mitocarta.xls
+    output: data/metadata.rda, data/se_raw.rda, data/se.rda, data/df_long.rda, data/df_long_l2fc.rda, data/df_long_l2fc_mean.rda
+    jobid: 0
+    reason: Missing output files: data/se_raw.rda, data/metadata.rda, data/se.rda, data/df_long_l2fc_mean.rda, data/df_long_l2fc.rda, data/df_long.rda
+    resources: tmpdir=/tmp
+
+[Tue Aug  5 09:01:46 2025]
+Error in rule data_prep:
+    jobid: 0
+    input: data-raw/proteomic_data.csv, data-raw/design.xlsx, data-raw/keywords.xlsx, data-raw/mitocarta.xls
+    output: data/metadata.rda, data/se_raw.rda, data/se.rda, data/df_long.rda, data/df_long_l2fc.rda, data/df_long_l2fc_mean.rda
+
+RuleException:
+CalledProcessError in file /home/sj/repos/manuscript_beta2_single_fiber_snakemake/snakefile, line 17:
+Command 'set -euo pipefail;  Rscript --vanilla /home/sj/repos/manuscript_beta2_single_fiber_snakemake/.snakemake/scripts/tmphbtta9m8.data_preparation.R' returned non-zero exit status 1.
+  File "/home/sj/repos/manuscript_beta2_single_fiber_snakemake/snakefile", line 17, in __rule_data_prep
+  File "/home/sj/miniforge3/envs/snakemake_env/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2025-08-05T090145.606885.snakemake.log

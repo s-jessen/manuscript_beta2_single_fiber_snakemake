@@ -1,0 +1,56 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 10
+Rules claiming more threads will be scaled down.
+Job stats:
+job          count
+---------  -------
+data_prep        1
+figure1          1
+limma            1
+total            3
+
+Select jobs to execute...
+
+[Tue Aug  5 14:43:42 2025]
+rule data_prep:
+    input: data-raw/proteomic_data.csv, data-raw/design.xlsx, data-raw/keywords.xlsx, data-raw/mitocarta.xls, R/settings.R
+    output: data/metadata.rds, data/se_raw.rds, data/se.rds, data/df_long.rds, data/df_long_l2fc.rds, data/df_long_l2fc_mean.rds
+    jobid: 1
+    reason: Code has changed since last execution
+    resources: tmpdir=/tmp
+
+[Tue Aug  5 14:43:57 2025]
+Finished job 1.
+1 of 3 steps (33%) done
+Select jobs to execute...
+
+[Tue Aug  5 14:43:57 2025]
+rule limma:
+    input: data/se.rds
+    output: data/results_main.rds, data/results_i.rds, data/results_ii.rds, data/results_interaction.rds, data/results_ter_main.rds, data/results_ter_i.rds, data/results_ter_ii.rds, data/results_ter_interaction.rds, data/results_res_main.rds, data/results_res_i.rds, data/results_res_ii.rds, data/results_res_interaction.rds, data/results.rds, data/results_i_and_ii_interaction.rds, data/results_i_interaction.rds, data/results_ii_interaction.rds, data/results_myh_ii_vs_i.rds
+    jobid: 2
+    reason: Input files updated by another job: data/se.rds
+    resources: tmpdir=/tmp
+
+[Tue Aug  5 14:44:22 2025]
+Finished job 2.
+2 of 3 steps (67%) done
+Select jobs to execute...
+
+[Tue Aug  5 14:44:22 2025]
+localrule figure1:
+    input: R/functions.R, R/settings.R, data/df_long.rds, data/results_myh_ii_vs_i.rds, data/se_raw.rds, data/se.rds, data/metadata.rds
+    output: data/myh_distribution.csv, data/figures/figure1/myh_distribution.svg
+    jobid: 0
+    reason: Input files updated by another job: data/results_myh_ii_vs_i.rds, data/df_long.rds, data/se_raw.rds, data/se.rds, data/metadata.rds
+    resources: tmpdir=/tmp
+
+Waiting at most 5 seconds for missing files.
+MissingOutputException in rule figure1 in file /home/sj/repos/manuscript_beta2_single_fiber_snakemake/snakefile, line 151:
+Job 0 completed successfully, but some output files are missing. Missing files after 5 seconds. This might be due to filesystem latency. If that is the case, consider to increase the wait time with --latency-wait:
+data/myh_distribution.csv
+data/figures/figure1/myh_distribution.svg
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2025-08-05T144342.043252.snakemake.log

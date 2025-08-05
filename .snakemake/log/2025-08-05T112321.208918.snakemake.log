@@ -1,0 +1,94 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 10
+Rules claiming more threads will be scaled down.
+Job stats:
+job                 count
+----------------  -------
+all                     1
+data_prep               1
+figure1                 1
+gsea                    1
+gsea_interaction        1
+limma                   1
+total                   6
+
+Select jobs to execute...
+
+[Tue Aug  5 11:23:21 2025]
+rule data_prep:
+    input: data-raw/proteomic_data.csv, data-raw/design.xlsx, data-raw/keywords.xlsx, data-raw/mitocarta.xls, R/settings.R
+    output: data/metadata.rds, data/se_raw.rds, data/se.rds, data/df_long.rds, data/df_long_l2fc.rds, data/df_long_l2fc_mean.rds
+    jobid: 2
+    reason: Updated input files: R/settings.R
+    resources: tmpdir=/tmp
+
+[Tue Aug  5 11:23:36 2025]
+Finished job 2.
+1 of 6 steps (17%) done
+Select jobs to execute...
+
+[Tue Aug  5 11:23:36 2025]
+rule limma:
+    input: data/se.rds
+    output: data/results_main.rds, data/results_i.rds, data/results_ii.rds, data/results_interaction.rds, data/results_ter_main.rds, data/results_ter_i.rds, data/results_ter_ii.rds, data/results_ter_interaction.rds, data/results_res_main.rds, data/results_res_i.rds, data/results_res_ii.rds, data/results_res_interaction.rds, data/results.rds, data/results_i_and_ii_interaction.rds, data/results_i_interaction.rds, data/results_ii_interaction.rds, data/results_myh_ii_vs_i.rds
+    jobid: 1
+    reason: Input files updated by another job: data/se.rds
+    resources: tmpdir=/tmp
+
+[Tue Aug  5 11:24:01 2025]
+Finished job 1.
+2 of 6 steps (33%) done
+Select jobs to execute...
+
+[Tue Aug  5 11:24:01 2025]
+localrule figure1:
+    input: R/functions.R, R/settings.R, data/df_long.rds, data/results_myh_ii_vs_i.rds, data/se_raw.rds, data/se.rds, data/metadata.rds
+    output: data/myh_distribution.csv, data/figures/figure1/myh_distribution.svg, data/figures/figure1/venn_myh.svg, data/figures/figure1/median_log10_intensity.svg, data/figures/figure1/myh_volcano.svg, data/figures/figure1/PCA.svg, data/figures/figure1/loadings.svg
+    jobid: 5
+    reason: Missing output files: data/figures/figure1/myh_volcano.svg, data/figures/figure1/myh_distribution.svg, data/figures/figure1/venn_myh.svg, data/myh_distribution.csv, data/figures/figure1/PCA.svg, data/figures/figure1/median_log10_intensity.svg, data/figures/figure1/loadings.svg; Input files updated by another job: data/results_myh_ii_vs_i.rds, data/se.rds, data/se_raw.rds, data/metadata.rds, data/df_long.rds
+    resources: tmpdir=/tmp
+
+[Tue Aug  5 11:24:01 2025]
+rule gsea:
+    input: data/results_res_main.rds, data/results_res_i.rds, data/results_res_ii.rds, data/results_res_interaction.rds, data/results_ter_main.rds, data/results_ter_i.rds, data/results_ter_ii.rds, data/results_ter_interaction.rds, R/settings.R
+    output: data/gsea_res_i.rds, data/gsea_res_ii.rds, data/gsea_ter_i.rds, data/gsea_ter_ii.rds, data/gsea_all.rds, data/gsea/gsea_results_res_i, data/gsea/gsea_results_res_ii, data/gsea/gsea_results_ter_i, data/gsea/gsea_results_ter_ii, data/gsea/gsea_results_all
+    jobid: 3
+    reason: Missing output files: data/gsea_all.rds, data/gsea/gsea_results_ter_i, data/gsea_ter_i.rds, data/gsea/gsea_results_ter_ii, data/gsea_res_i.rds, data/gsea_res_ii.rds, data/gsea_ter_ii.rds, data/gsea/gsea_results_res_ii, data/gsea/gsea_results_res_i, data/gsea/gsea_results_all; Input files updated by another job: data/results_ter_i.rds, data/results_ter_ii.rds, data/results_ter_interaction.rds, data/results_ter_main.rds, data/results_res_ii.rds, data/results_res_interaction.rds, data/results_res_main.rds, data/results_res_i.rds
+    resources: tmpdir=/tmp
+
+[Tue Aug  5 11:24:01 2025]
+rule gsea_interaction:
+    input: data/results_i_and_ii_interaction.rds, data/results_i_interaction.rds, data/results_ii_interaction.rds, R/settings.R
+    output: data/gsea_i_and_ii_interaction.rds, data/gsea_i_interaction.rds, data/gsea_ii_interaction.rds, data/gsea/gsea_results_i_and_ii_interaction, data/gsea/gsea_results_i_interaction, data/gsea/gsea_results_ii_interaction
+    jobid: 4
+    reason: Missing output files: data/gsea_i_interaction.rds, data/gsea/gsea_results_ii_interaction, data/gsea/gsea_results_i_interaction, data/gsea/gsea_results_i_and_ii_interaction, data/gsea_i_and_ii_interaction.rds, data/gsea_ii_interaction.rds; Input files updated by another job: data/results_ii_interaction.rds, data/results_i_and_ii_interaction.rds, data/results_i_interaction.rds
+    resources: tmpdir=/tmp
+
+Waiting at most 60 seconds for missing files.
+[Tue Aug  5 11:24:09 2025]
+Error in rule gsea_interaction:
+    jobid: 4
+    input: data/results_i_and_ii_interaction.rds, data/results_i_interaction.rds, data/results_ii_interaction.rds, R/settings.R
+    output: data/gsea_i_and_ii_interaction.rds, data/gsea_i_interaction.rds, data/gsea_ii_interaction.rds, data/gsea/gsea_results_i_and_ii_interaction, data/gsea/gsea_results_i_interaction, data/gsea/gsea_results_ii_interaction
+
+RuleException:
+CalledProcessError in file /home/sj/repos/manuscript_beta2_single_fiber_snakemake/snakefile, line 148:
+Command 'set -euo pipefail;  Rscript --vanilla /home/sj/repos/manuscript_beta2_single_fiber_snakemake/.snakemake/scripts/tmpjza47cmw.gsea_interaction.R' returned non-zero exit status 1.
+  File "/home/sj/repos/manuscript_beta2_single_fiber_snakemake/snakefile", line 148, in __rule_gsea_interaction
+  File "/home/sj/miniforge3/envs/snakemake_env/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+MissingOutputException in rule figure1 in file /home/sj/repos/manuscript_beta2_single_fiber_snakemake/snakefile, line 150:
+Job 5  completed successfully, but some output files are missing. Missing files after 60 seconds. This might be due to filesystem latency. If that is the case, consider to increase the wait time with --latency-wait:
+data/myh_distribution.csv
+data/figures/figure1/myh_distribution.svg
+data/figures/figure1/venn_myh.svg
+data/figures/figure1/median_log10_intensity.svg
+data/figures/figure1/myh_volcano.svg
+data/figures/figure1/PCA.svg
+data/figures/figure1/loadings.svg
+[Tue Aug  5 11:25:01 2025]
+Finished job 3.
+3 of 6 steps (50%) done
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2025-08-05T112321.208918.snakemake.log
