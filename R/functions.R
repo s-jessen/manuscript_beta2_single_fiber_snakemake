@@ -255,7 +255,7 @@ plot_complexes <- function(complex_list, complex_labels = NULL, complex_order = 
   complex_results_interaction <- list()
   complex_results_within <- list()
 
-  for (complex in complexes){
+  for (complex in complex_list){
     for (fibertype in fiber_types){
 
       #Create key to store unique result names

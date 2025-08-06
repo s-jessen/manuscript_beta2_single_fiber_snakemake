@@ -24,7 +24,7 @@ theme_set(
                                 linewidth = 0.25),
     panel.grid.minor=element_blank(),
     panel.grid.major = element_blank(),
-    plot.background = element_blank(),
+    plot.background = element_rect(fill = "white", linewidth = 0),
     plot.title = element_text(size = 8,
                               margin = margin(0, 0, 0, 0),
                               hjust = 0),

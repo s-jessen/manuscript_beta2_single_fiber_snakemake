@@ -1,5 +1,4 @@
 source("renv/activate.R")
-source(snakemake@input[["settings"]])
 
 #Load libraries
 library(tidyverse)

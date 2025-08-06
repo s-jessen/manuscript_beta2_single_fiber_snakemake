@@ -34,16 +34,36 @@ rule all:
     'data/figures/figure1/median_log10_intensity.svg',
     'data/figures/figure1/myh_volcano.svg',
     'data/figures/figure1/PCA.svg',
-    'data/figures/figure1/loadings.svg'
+    'data/figures/figure1/loadings.svg',
+
+    #Figure 2 output
+    'data/top25_upregulated.csv',
+    'data/myh6_abundances.csv',
+    'data/correlations_i_vs_ii.csv',
+    'data/correlations_res_vs_b2a.csv',
+    'data/figures/figure2/volcanoes.svg',
+    'data/figures/figure2/venn.svg',
+    'data/figures/figure2/top25_upregulated.svg',
+    'data/figures/figure2/myh6.svg',
+    'data/figures/figure2/cor_i_vs_ii.svg',
+    'data/figures/figure2/cor_res_vs_b2a.svg',
+    'data/figures/figure2/gsea.svg',
+
+    #Figure 3 output
+    'data/figures/figure3/volcanoes.svg',
+    'data/figures/figure3/gsea.svg',
+    'data/figures/figure3/ribosomal_proteins.svg',
+    'data/figures/figure3/mitochondrial_proteins.svg',
+    'data/figures/figure3/structural_go_terms.svg',
+    'data/figures/figure3/metabolic_go_terms.svg'
 
 rule data_prep:
   input:
+    settings = 'R/settings.R',
     raw_data = 'data-raw/proteomic_data.csv',
     design = 'data-raw/design.xlsx',
     keywords = 'data-raw/keywords.xlsx',
-    mitocarta = 'data-raw/mitocarta.xls',
-    #Settings
-    settings = 'R/settings.R'
+    mitocarta = 'data-raw/mitocarta.xls'
     
   output:
     metadata = 'data/metadata.rds',
@@ -100,14 +120,12 @@ rule gsea:
     results_res_i = 'data/results_res_i.rds',
     results_res_ii = 'data/results_res_ii.rds',
     results_res_interaction = 'data/results_res_interaction.rds',
+    
     #Terbutaline results
     results_ter_main = 'data/results_ter_main.rds',
     results_ter_i = 'data/results_ter_i.rds',
     results_ter_ii = 'data/results_ter_ii.rds',
-    results_ter_interaction = 'data/results_ter_interaction.rds',
-
-    #Settings
-    settings = 'R/settings.R'
+    results_ter_interaction = 'data/results_ter_interaction.rds'
 
   output:
     gsea_res_i = 'data/gsea_res_i.rds',
@@ -130,16 +148,15 @@ rule gsea_interaction:
     #Interaction results
     results_i_and_ii_interaction = 'data/results_i_and_ii_interaction.rds',
     results_i_interaction = 'data/results_i_interaction.rds',
-    results_ii_interaction = 'data/results_ii_interaction.rds',
-
-    #Settings
-    settings = 'R/settings.R'
+    results_ii_interaction = 'data/results_ii_interaction.rds'
 
   output:
+    #Files
     gsea_i_and_ii_interaction = 'data/gsea_i_and_ii_interaction.rds',
     gsea_i_interaction = 'data/gsea_i_interaction.rds',
     gsea_ii_interaction = 'data/gsea_ii_interaction.rds',
 
+    #Data frames
     df_gsea_i_and_ii_interaction = 'data/gsea/gsea_results_i_and_ii_interaction.csv',
     df_gsea_i_interaction = 'data/gsea/gsea_results_i_interaction.csv',
     df_gsea_ii_interaction = 'data/gsea/gsea_results_ii_interaction.csv'
@@ -158,7 +175,10 @@ rule figure1:
     metadata = 'data/metadata.rds'
   
   output:
+    #Data frames
     df_long_myh = 'data/myh_distribution.csv', #MYH distribution dataset
+
+    #Figures
     fig_myh_distribution = 'data/figures/figure1/myh_distribution.svg',
     fig_venn = 'data/figures/figure1/venn_myh.svg',
     fig_ranked_intensities = 'data/figures/figure1/median_log10_intensity.svg',
@@ -168,3 +188,80 @@ rule figure1:
 
   script:
     'R/figure1.R'
+
+rule figure2:
+  input:
+    functions = 'R/functions.R',
+    settings = 'R/settings.R',
+    df_long = 'data/df_long.rds',
+    df_long_l2fc = 'data/df_long_l2fc.rds',
+    df_long_l2fc_mean = 'data/df_long_l2fc_mean.rds',
+
+    #Intervention group independent results
+    results_main = 'data/results_main.rds',
+    results_i = 'data/results_i.rds',
+    results_ii = 'data/results_ii.rds',
+    results_interaction = 'data/results_interaction.rds',
+    
+    #Terbutaline results
+    results_ter_main = 'data/results_ter_main.rds',
+    results_ter_i = 'data/results_ter_i.rds',
+    results_ter_ii = 'data/results_ter_ii.rds',
+    results_ter_interaction = 'data/results_ter_interaction.rds',
+    
+    #Resistance training results
+    results_res_main = 'data/results_res_main.rds',
+    results_res_i = 'data/results_res_i.rds',
+    results_res_ii = 'data/results_res_ii.rds',
+    results_res_interaction = 'data/results_res_interaction.rds',
+
+    #GSEA results
+    gsea_all = 'data/gsea_all.rds'
+
+  output:
+    #Data frames
+    top25_upregulated = 'data/top25_upregulated.csv',
+    myh6_abundances = 'data/myh6_abundances.csv',
+    cor_i_vs_ii = 'data/correlations_i_vs_ii.csv',
+    cor_res_vs_b2a = 'data/correlations_res_vs_b2a.csv',
+
+    #Figures
+    fig_volcanoes = 'data/figures/figure2/volcanoes.svg',
+    fig_venn = 'data/figures/figure2/venn.svg',
+    fig_top25_upregulated = 'data/figures/figure2/top25_upregulated.svg',
+    fig_myh6 = 'data/figures/figure2/myh6.svg',
+    fig_cor_i_vs_ii = 'data/figures/figure2/cor_i_vs_ii.svg',
+    fig_cor_res_vs_b2a = 'data/figures/figure2/cor_res_vs_b2a.svg',
+    fig_gsea = 'data/figures/figure2/gsea.svg'
+
+  script:
+    'R/figure2.R'
+
+rule figure3:
+  input:
+    functions = 'R/functions.R',
+    settings = 'R/settings.R',
+    df_long = 'data/df_long.rds',
+    df_long_l2fc = 'data/df_long_l2fc.rds',
+
+    #Interaction between intervention groups
+    results_i_and_ii_interaction = 'data/results_i_and_ii_interaction.rds',  
+    results_i_interaction = 'data/results_i_interaction.rds',                
+    results_ii_interaction = 'data/results_ii_interaction.rds',
+
+    #GSEA interaction results
+    gsea_i_and_ii_interaction = 'data/gsea_i_and_ii_interaction.rds',
+    gsea_i_interaction = 'data/gsea_i_interaction.rds',
+    gsea_ii_interaction = 'data/gsea_ii_interaction.rds'
+
+  output:
+    #Figures
+    fig_volcanoes = 'data/figures/figure3/volcanoes.svg',
+    fig_gsea = 'data/figures/figure3/gsea.svg',
+    fig_ribosomal_proteins = 'data/figures/figure3/ribosomal_proteins.svg',
+    fig_mitochondrial_proteins = 'data/figures/figure3/mitochondrial_proteins.svg',
+    fig_structural_go_terms = 'data/figures/figure3/structural_go_terms.svg',
+    fig_metabolic_go_terms = 'data/figures/figure3/metabolic_go_terms.svg'
+
+  script:
+    'R/figure3.R'

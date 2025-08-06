@@ -1,12 +1,12 @@
 source("renv/activate.R")
-source(snakemake@input[["settings"]])
 
-#Load libraries
 library(tidyverse)
 library(clusterProfiler)
 library(org.Hs.eg.db)
 
-## Enrichment analysis for each fiber type and intervention
+
+# Enrichment analysis for each fiber type and intervention ---------------
+
 gsea_results <- list()
 gsea_results_filtered <- list()
 
@@ -41,7 +41,9 @@ for (comparison in names(results_list)){
   gsea_results[[comparison]] <- gsea
 }
 
-#Extract and save to data folder
+
+# Extract and save to data folder ----------------------------------------
+
 gsea_res_i <- gsea_results[["res_i"]]
 gsea_res_ii <- gsea_results[["res_ii"]]
 gsea_ter_i <- gsea_results[["ter_i"]]

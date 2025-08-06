@@ -12,7 +12,9 @@ library(readxl)
 impure <- c("s_1", "s_2", "s_3", "s_4", "s_5", "s_6",
             "s_7", "s_8", "s_13", "s_15", "s_50", "s_52")
 
-#Load and clean data
+
+# Load and clean data ----------------------------------------------------
+
 df <- read.csv2(snakemake@input[["raw_data"]]) %>%
   #Remove impure samples
   dplyr::select(-impure) %>%
@@ -45,7 +47,9 @@ saveRDS(metadata, snakemake@output[["metadata"]])
 saveRDS(se_raw, snakemake@output[["se_raw"]])
 saveRDS(se, snakemake@output[["se"]])
 
-#Create long form data frame for all data
+
+# Create long form data frame for all data -------------------------------
+
 df_long <- SummarizedExperiment::assay(se) %>%
   tibble::rownames_to_column(var="protein") %>%
   tidyr::pivot_longer(
@@ -81,7 +85,9 @@ df_long <- df_long %>%
   merge(mitocarta, by="protein", all.x = T) %>%
   dplyr::rename(mito = pathways)
 
-#Create long form data frame with individual log2fold changes
+
+# Create long form data frame with individual log2fold changes ------------
+
 df_long_l2fc <- df_long %>%
   dplyr::group_by(protein, id, fiber_type) %>%
   dplyr::mutate(l2fc = abundance[time == "post"] - abundance[time == "pre"]) %>%
@@ -91,13 +97,17 @@ df_long_l2fc <- df_long %>%
   dplyr::filter(time!="pre") %>%
   dplyr::select(-c("abundance", "time"))
 
-#Create data frame of mean log2fold changes
+
+# Create data frame of mean log2fold changes -----------------------------
+
 df_long_l2fc_mean <- df_long_l2fc %>%
   dplyr::group_by(protein, fiber_type, intervention) %>%
   dplyr::summarize(mean_l2fc = mean(l2fc, na.rm = T),
                    n = sum(!is.na(l2fc)))
 
-#Save to data folder
+
+# Save to data folder ----------------------------------------------------
+
 saveRDS(df_long, snakemake@output[["df_long"]])
 saveRDS(df_long_l2fc, snakemake@output[["df_long_l2fc"]])
 saveRDS(df_long_l2fc_mean, snakemake@output[["df_long_l2fc_mean"]])

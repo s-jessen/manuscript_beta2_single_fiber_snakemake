@@ -7,8 +7,8 @@ library(qvalue)
 
 se <- readRDS(snakemake@input[["se"]])
 
-#Main effects, within-group effects, and interaction effects independent of group
-
+# Main effects, within-group effects, and interaction effects independent of group ----
+cat("\033[1;33mRunning Limma main effect analyses\033[0m\n")
 #Combine factors into a single term for fiber_type, time, and intervention
 factors <- paste(se$time, se$fiber_type, sep=".")
 
@@ -87,7 +87,9 @@ saveRDS(results_i, snakemake@output[["results_i"]])
 saveRDS(results_ii, snakemake@output[["results_ii"]])
 saveRDS(results_interaction, snakemake@output[["results_interaction"]])
 
-#Main effects, within-group effects, and interaction effects for terbutaline-group
+
+# Main effects, within-group effects, and interaction effects for terbutaline-group ----
+cat("\033[1;33mRunning Limma within-group & interaction effect (type II vs. type I) analyses for B2A group\033[0m\n")
 #Subset SE
 se_ter <- se[,se$intervention == "terbutaline"]
 
@@ -169,8 +171,9 @@ saveRDS(results_ter_i, snakemake@output[["results_ter_i"]])
 saveRDS(results_ter_ii, snakemake@output[["results_ter_ii"]])
 saveRDS(results_ter_interaction, snakemake@output[["results_ter_interaction"]])
 
-#Main effects, within-group effects, and interaction effects for resistance-group
 
+# Main effects, within-group effects, and interaction effects for resistance-group ----
+cat("\033[1;33mRunning Limma within-group & interaction effect (type II vs. type I) analyses for RES group\033[0m\n")
 #Subset SE
 se_res <- se[,se$intervention == "resistance"]
 
@@ -262,8 +265,9 @@ results <- dplyr::bind_rows(results_res_i,
 #Save unified results
 saveRDS(results, snakemake@output[["results"]])
 
-#Interaction effects independent of fiber type
 
+# Interaction effects independent of fiber type --------------------------
+cat("\033[1;33mRunning Limma interaction effect (RES vs B2A, independent of fiber type) analyses\033[0m\n")
 #Subset SE
 se_interaction <- se
 
@@ -318,6 +322,7 @@ results_i_and_ii_interaction <- limma::topTable(fit2_i_and_ii_interaction, coef 
 saveRDS(results_i_and_ii_interaction, snakemake@output[["results_i_and_ii_interaction"]])
 
 #Interaction effects for type I fibers
+cat("\033[1;33mRunning Limma interaction effect (RES vs B2A, type I) analyses\033[0m\n")
 #Subset SE
 se_i_interaction <- se[, se$fiber_type== 'I']
 
@@ -371,7 +376,9 @@ results_i_interaction <- limma::topTable(fit2_i_interaction, coef = "interaction
 #Save results
 saveRDS(results_i_interaction, snakemake@output[["results_i_interaction"]])
 
-#Interaction effects for type II fibers
+
+# Interaction effects for type II fibers ---------------------------------
+cat("\033[1;33mRunning Limma interaction effect (RES vs B2A, type II) analyses\033[0m\n")
 #Subset SE
 se_ii_interaction <- se[, se$fiber_type== 'II']
 
@@ -426,7 +433,9 @@ results_ii_interaction <- limma::topTable(fit2_ii_interaction, coef = "interacti
 saveRDS(results_ii_interaction, snakemake@output[["results_ii_interaction"]])
 
 
-#MYH7 vs. MYH2 fibers
+
+# MYH7 vs. MYH2 fibers ---------------------------------------------------
+cat("\033[1;33mRunning Limma analysis for type II vs. type I fibers\033[0m\n")
 #Subset SE
 se_myh_ii_vs_i <- se[, se$time == 'pre']
 
