@@ -1,4 +1,5 @@
 library(ggplot2)
+library(svglite)
 
 #Colors
 upregulated_color = "#a51e22"
