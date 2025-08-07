@@ -167,7 +167,7 @@ ggplot2::ggsave(snakemake@output[["fig_ranked_intensities"]], width = 75, height
 
 
 # MYH2 vs. MYH7 volcano --------------------------------------------------
-cat("\033Creating MYH2 vs. MYH7 volcano (Fig. 1)\033[0m\n")
+cat("\033[1;33mCreating MYH2 vs. MYH7 volcano (Fig. 1)\033[0m\n")
 
 labels <- c(
   "ATP2A2",
@@ -195,7 +195,7 @@ ggplot2::ggsave(snakemake@output[["fig_myh_volcano"]], height = 50, width = 66, 
 
 
 # PCA & loadings ---------------------------------------------------------
-cat("\033Creating PCA plot (Fig. 1)\033[0m\n")
+cat("\033[1;33mCreating PCA plot (Fig. 1)\033[0m\n")
 
 # Subset SummarizedExperiment for only "pre" samples and filter for 70% valid values in at least one fiber-type
 se_pca <- PhosR::selectGrps(se[, se$time == "pre"], se[, se$time == "pre"]$fiber_type, 0.7, n = 1)
@@ -232,7 +232,7 @@ plot_pca <- ggplot(df_pca_plot, aes(PC1, PC2, color = fiber_type)) +
 # Save plot
 ggplot2::ggsave(snakemake@output[["fig_pca"]], width = 66, height = 50, units = "mm", plot = plot_pca)
 
-cat("\033Creating PC loadings plot (Fig. 1)\033[0m\n")
+cat("\033[1;33mCreating PC loadings plot (Fig. 1)\033[0m\n")
 
 # Retrieve loadings
 loadings <- as.data.frame(loadings(pca)) %>%

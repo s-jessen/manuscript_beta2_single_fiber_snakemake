@@ -307,19 +307,20 @@ plot_myh6 <- myh6_abundances %>%
       "resistance_I" = "Resistance Type I",
       "resistance_II" = "Resistance Type II",
       "terbutaline_I" = "B2A, Type I",
-      "terbutaline_II" = "B2a, Type II"
+      "terbutaline_II" = "B2A, Type II"
     )
   ) +
   scale_x_discrete(labels = c(pre = "Pre", post = "Post")) +
   theme(
+    legend.position = "none",
+    strip.text = element_blank()
   ) +
   labs(x = "", y = "log2 (abundance)")
 
 ggplot2::ggsave(snakemake@output[["fig_myh6"]], width = 35, height = 40, units = "mm", plot = plot_myh6)
 
-
 # Correlations - type II vs. type I --------------------------------------
-cat("\033[1;33mCreating correlation plot (type II vs. type I) (Fig. 2)\033[0m\n")
+wcat("\033[1;33mCreating correlation plot (type II vs. type I) (Fig. 2)\033[0m\n")
 # Create plotting data frame
 df <- df_long_l2fc_mean %>%
   dplyr::select(protein, intervention, fiber_type, mean_l2fc) %>%
