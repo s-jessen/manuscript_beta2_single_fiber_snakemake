@@ -33,8 +33,17 @@ docker pull sorenjessen/b2a_res_single_fiber:latest
 ### 4. ▶️ Run the analysis from within the root of the repository
 
 This command will mount your local 'raw-data' (input data), 'R' (scripts), and 'data' (output files such as Figures etc.) folders into the container and run the full pipeline:
-```bash
-bash run_in_docker_container.sh
+```
+#On linux/max
+bash run_docker_unix.sh
+
+##On Windows
+##You may need to run PowerShell as admin and run
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+#...followed by
+./run_docker_win.ps1
+
 ```
 
 This will automatically:
