@@ -1,9 +1,0 @@
-Building DAG of jobs...
-MissingInputException in rule all in file /home/sj/repos/manuscript_beta2_single_fiber_snakemake/snakefile, line 1:
-Missing input files for rule all:
-    affected files:
-        data/gsea/gsea_results_all
-        data/gsea/gsea_results_res_ii
-        data/gsea/gsea_results_ter_ii
-        data/gsea/gsea_results_res_i
-        data/gsea/gsea_results_ter_i
