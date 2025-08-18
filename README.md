@@ -34,11 +34,11 @@ docker pull sorenjessen/b2a_res_single_fiber:latest
 
 This command will mount your local 'raw-data' (input data), 'R' (scripts), and 'data' (output files such as Figures etc.) folders into the container and run the full pipeline:
 ```
-#On linux/max
+## ----- On linux/mac ----- ##
 bash run_docker_unix.sh
 
-##On Windows
-##You may need to run PowerShell as admin and run
+## ----- On Windows ----- ##
+#You may need to run PowerShell as admin and run
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 
 #...followed by
